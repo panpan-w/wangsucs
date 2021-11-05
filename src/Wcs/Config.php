@@ -10,7 +10,7 @@ class Config
     const WCS_TIMEOUT = 30;
     const WCS_CONNECTTIMEOUT = 30;
 
-    protected $config = [
+    public static $config = [
         //url设置
         "wcs_put_url" => "http://PUT_URL",
         "wcs_get_url" => "http://GET_URL",
@@ -51,13 +51,25 @@ class Config
     public function __construct(array $config = [])
     {
         if (!empty($config)) {
-            $this->config = array_merge($this->config, $config);
+            self::$config = array_merge(self::$config, $config);
         }
     }
     public function __call($name, $arguments)
     {
         // TODO: Implement __call() method.
         return $this->config[$name];
+    }
+    
+    //创建一个用来实例化对象的方法
+    public static function getInstance(){
+        if(!(self::$config instanceof self)){
+            self::$config = new self;
+        }
+        return self::$config;
+    }
+    //防止对象被复制
+    public function __clone(){
+        trigger_error('Clone is not allowed !');
     }
 }
 

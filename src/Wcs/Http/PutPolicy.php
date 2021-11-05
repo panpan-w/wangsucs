@@ -163,11 +163,10 @@ final class PutPolicy
     public function get_token() {
         $ppString = $this->to_string();
         $ppString = Utils::url_safe_base64_encode($ppString);
-        $config = new Config();
-        $ak = $config->wcs_access_key();
-        $sk = $config->wcs_secret_key();
+        $config = Config::$config;
+        $ak = $config['wcs_access_key'];
+        $sk = $config['wcs_secret_key'];
         $sign = hash_hmac('sha1', $ppString, $sk, false);
         return $ak.':'.Utils::url_safe_base64_encode($sign).':'.$ppString;
-        #return \Wcs\get_token_with_data($config, $ppString);
     }
 }
